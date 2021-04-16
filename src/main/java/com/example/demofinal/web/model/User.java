@@ -5,7 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name="users")
@@ -15,6 +15,7 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private long id;
+
 
     @Column(name = "name")
     private String name;
@@ -35,8 +36,10 @@ public class User implements UserDetails {
     @JoinTable(name = "user_roles",
     joinColumns = @JoinColumn(name = "user_id"),
     inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roles;
+    private List<Role> roles;
 
+    @Transient
+    private String[] rolesArray;
 
     public User() {
     }
@@ -52,6 +55,16 @@ public class User implements UserDetails {
         this.name = name;
         this.lastname = lastname;
         this.job = job;
+    }
+
+    public User(long id, String name, String lastname, String job, String username, String password, List<Role> roles) {
+        this.id = id;
+        this.name = name;
+        this.lastname = lastname;
+        this.job = job;
+        this.username = username;
+        this.password = password;
+        this.roles = roles;
     }
 
     public long getId() {
@@ -94,12 +107,20 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public Set<Role> getRoles() {
-        return roles;
+    public String getRoles() {
+        return roles.toString().replace("[", "").replace("]", "");
     }
 
-    public void setRoles(Set<Role> roles) {
+    public void setRoles(List<Role> roles) {
         this.roles = roles;
+    }
+
+    public String[] getRolesArray() {
+        return rolesArray;
+    }
+
+    public void setRolesArray(String[] rolesArray) {
+        this.rolesArray = rolesArray;
     }
 
     @Override

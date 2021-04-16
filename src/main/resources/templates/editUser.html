@@ -2,6 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+
     <title>Edit User</title>
 </head>
 <body>
@@ -28,14 +29,21 @@
             <th><label for="job">Job</label></th>
             <th><input type="text" th:field="*{job}" id="job"></th>
         </tr>
-
-        <tr>
-            <th><input type="submit" value="Update"></th>
-        </tr>
     </table>
-    <br>
-    <br>
-    <form th:action="@{/logout}"><button>Exit</button></form></form>
+    <form th:action="@{/admin/{id}(id=${user.getId()})}" th:object="${rolesList}">
+        <label>
+            <select th:multiple="${rolesList.size()}" name="rolesList">
+                <option th:each="role: ${rolesList}"
+                        th:value="${role}"
+                        th:text="${role}">
+                </option>
+            </select>
+        </label>
+        <a><input type="submit" value="Update"></a>
+    </form>
 </form>
+<br>
+<br>
+<form th:action="@{/logout}"><button>Exit</button></form>
 </body>
 </html>

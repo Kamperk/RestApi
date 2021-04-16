@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService{
     public void saveUser(User user) {
         String crypto = new BCryptPasswordEncoder().encode(user.getPassword());
         user.setPassword(crypto);
-        user.setRoles(Collections.singleton(new Role(2L, "USER")));
+        user.setRoles(Collections.singletonList(new Role(2L, "USER")));
         userDao.saveUser(user);
     }
 
