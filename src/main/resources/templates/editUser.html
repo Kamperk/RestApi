@@ -33,6 +33,7 @@
     <form th:action="@{/admin/{id}(id=${user.getId()})}" th:object="${rolesList}">
         <label>
             <select th:multiple="${rolesList.size()}" name="rolesList">
+                <option selected>Выберите роль</option>
                 <option th:each="role: ${rolesList}"
                         th:value="${role}"
                         th:text="${role}">
