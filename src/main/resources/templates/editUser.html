@@ -43,16 +43,22 @@
             <th><input type="text" th:field="*{job}" id="job"></th>
         </tr>
     <form>
-    <select class="form-control" th:multiple="${rolesList.size()}" name="rolesList">
+
+
+    </form>
+    </table>
+        <br>
+        <br>
+        <div class="container">
+            <select class="form-control" th:multiple="${rolesList.size()}" name="rolesList">
                 <option selected >Выберите роль</option>
                 <option th:each="role: ${rolesList}"
                         th:value="${role}"
                         th:text="${role}">
                 </option>
             </select>
-    </form>
-    </table>
     <br>
+        </div>
         <a><input type="submit" value="Update"></a>
     </div>
 </form>

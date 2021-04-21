@@ -4,6 +4,8 @@ import com.example.demofinal.web.DAO.RoleDao;
 import com.example.demofinal.web.Service.UserService;
 import com.example.demofinal.web.model.Role;
 import com.example.demofinal.web.model.User;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +29,11 @@ public class AdminController {
 
     @GetMapping("")
     public String showAllUsers(Model model){
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         model.addAttribute("allUsers", userService.getAll());
+        model.addAttribute("authorizedUser", userDetails);
+        model.addAttribute("newUser", new User());
+        model.addAttribute("allRoles", roleDao.findAll());
         return "showAll";
     }
     @GetMapping("/{id}/show")
@@ -39,7 +45,6 @@ public class AdminController {
     @GetMapping("/new")
     public String newUser(Model model){
         model.addAttribute("user", new User());
-        model.addAttribute("rolesList",roleDao.findAll());
         return "newUser";
     }
     @PostMapping("")
