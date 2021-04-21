@@ -1,16 +1,16 @@
 package com.example.demofinal.web.DAO;
 
 import com.example.demofinal.web.model.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 
 @Repository
-public interface UserDao {
-    User getUser(long id);
-    List<User> getAll();
-    void editUser(User user);
-    void saveUser(User user);
-    void removeUser(long id);
-    public User findByUsername(String login);
+@EnableJpaRepositories
+public interface UserDao extends JpaRepository<User, Long>{
+    User findByUsername(String login);
 }

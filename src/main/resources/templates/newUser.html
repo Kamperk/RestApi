@@ -3,6 +3,10 @@
 ">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
     <title>New Person</title>
 
@@ -30,6 +34,14 @@
         <tr>
             <th><label for="job">Job</label></th>
             <th><input type="text" th:field="*{job}" id="job" placeholder="Write your job"></th>
+        </tr>
+        <tr>
+            <th><label for="age">Age</label></th>
+            <th><input type="text" th:field="*{age}" id="age" placeholder="Write your age"></th>
+        </tr>
+        <tr>
+            <th><label for="email">Email</label></th>
+            <th><input type="text" th:field="*{email}" id="email" placeholder="Write your email"></th>
         </tr>
     </table>
 

@@ -32,6 +32,12 @@ public class User implements UserDetails {
     @Column(name = "password")
     private String password;
 
+    @Column
+    private Byte age;
+
+    @Column
+    private String email;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles",
     joinColumns = @JoinColumn(name = "user_id"),
@@ -57,14 +63,33 @@ public class User implements UserDetails {
         this.job = job;
     }
 
-    public User(long id, String name, String lastname, String job, String username, String password, List<Role> roles) {
-        this.id = id;
+    public User(long id, String name, String lastname, String job, String username, String password, Byte age, String email, List<Role> roles, String[] rolesArray) {
+        this.id=id;
         this.name = name;
         this.lastname = lastname;
         this.job = job;
         this.username = username;
         this.password = password;
+        this.age = age;
+        this.email = email;
         this.roles = roles;
+        this.rolesArray = rolesArray;
+    }
+
+    public Byte getAge() {
+        return age;
+    }
+
+    public void setAge(Byte age) {
+        this.age = age;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public long getId() {

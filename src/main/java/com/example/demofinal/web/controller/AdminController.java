@@ -39,8 +39,7 @@ public class AdminController {
     @GetMapping("/new")
     public String newUser(Model model){
         model.addAttribute("user", new User());
-   //     String [] roles = new String[]{"ADMIN", "USER"};
-        model.addAttribute("rolesList",roleDao.getAll());
+        model.addAttribute("rolesList",roleDao.findAll());
         return "newUser";
     }
     @PostMapping("")
@@ -52,20 +51,20 @@ public class AdminController {
     @GetMapping("/{id}/edit")
     public String editUser(@PathVariable("id") long id, Model model){
         model.addAttribute("user", userService.getUser(id));
-        model.addAttribute("rolesList",roleDao.getAll());
+        model.addAttribute("rolesList",roleDao.findAll());
         return "editUser";
     }
 
     @PatchMapping("/{id}")
-    public String editUser(@ModelAttribute("user") User user, @ModelAttribute("rolesList") String [] roleList){
+    public String editUser(@ModelAttribute("user") User user, @RequestParam("rolesList") String [] roleList){
         List<Role> list =new ArrayList<>();
         if(roleList!=null){
         for(int i = 0; i<roleList.length; i++){
             if(roleList[i].equals("ADMIN")){
-                list.add(roleDao.getByName("ROLE_ADMIN"));
+                list.add(roleDao.findByName("ROLE_ADMIN"));
             }
             if(roleList[i].equals("USER")){
-                list.add(roleDao.getByName("ROLE_USER"));
+                list.add(roleDao.findByName("ROLE_USER"));
             }
         }
         user.setRoles(list);}

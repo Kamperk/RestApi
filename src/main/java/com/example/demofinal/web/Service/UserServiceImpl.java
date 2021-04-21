@@ -24,19 +24,19 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public User getUser(long id) {
-        return userDao.getUser(id);
+        return userDao.getOne(id);
     }
 
     @Override
     public List<User> getAll() {
-        return userDao.getAll();
+        return userDao.findAll();
     }
 
     @Override
     public void editUser(User user) {
         String crypto = new BCryptPasswordEncoder().encode(user.getPassword());
         user.setPassword(crypto);
-        userDao.editUser(user);
+        userDao.saveAndFlush(user);
     }
 
     @Override
@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService{
         String crypto = new BCryptPasswordEncoder().encode(user.getPassword());
         user.setPassword(crypto);
         user.setRoles(Collections.singletonList(new Role(2L, "USER")));
-        userDao.saveUser(user);
+        userDao.save(user);
     }
 
     @Override
@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public void removeUser(long id ) {
-        userDao.removeUser(id);
+        userDao.deleteById(id);
     }
 
     @Override
