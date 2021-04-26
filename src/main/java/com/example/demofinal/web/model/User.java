@@ -22,16 +22,13 @@ public class User implements UserDetails {
     @Column(name = "lastname")
     private String lastname;
 
-    @Column(name = "username", unique = true)
-    private String username;
-
     @Column(name = "password")
     private String password;
 
     @Column
     private Byte age;
 
-    @Column
+    @Column(unique = true)
     private String email;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -43,11 +40,10 @@ public class User implements UserDetails {
     public User() {
     }
 
-    public User(long id, String name, String lastname, String username, String password, Byte age, String email, List<Role> roles) {
+    public User(long id, String name, String lastname, String password, Byte age, String email, List<Role> roles) {
         this.id=id;
         this.name = name;
         this.lastname = lastname;
-        this.username = username;
         this.password = password;
         this.age = age;
         this.email = email;
@@ -94,9 +90,6 @@ public class User implements UserDetails {
         this.lastname = lastname;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
 
     public void setPassword(String password) {
         this.password = password;
@@ -110,6 +103,8 @@ public class User implements UserDetails {
         this.roles = roles;
     }
 
+
+    // security
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles;
@@ -122,7 +117,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.username;
+        return this.email;
     }
 
     @Override

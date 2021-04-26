@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public void saveUser(User user) {
-        if ((userDao.findByUsername(user.getName()) == null) || (userDao.findByEmail(user.getEmail()) == null)){
+        if (userDao.findByEmail(user.getEmail()) == null){
         String crypto = new BCryptPasswordEncoder().encode(user.getPassword());
         user.setPassword(crypto);
         userDao.save(user);}
@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public User findByUsername(String login) {
-        return userDao.findByUsername(login);
+        return userDao.findByEmail(login);
     }
 
     @Override
@@ -62,7 +62,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        User user = userDao.findByUsername(username);
+        User user = userDao.findByEmail(username);
 
         if(user==null){
             throw new UsernameNotFoundException(String.format("Пользователь с именем %s не найден", username));
