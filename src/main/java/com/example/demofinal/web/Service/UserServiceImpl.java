@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -41,10 +42,11 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public void saveUser(User user) {
+        if ((userDao.findByUsername(user.getName()) == null) || (userDao.findByEmail(user.getEmail()) == null)){
         String crypto = new BCryptPasswordEncoder().encode(user.getPassword());
         user.setPassword(crypto);
-        user.setRoles(Collections.singletonList(new Role(2L, "USER")));
-        userDao.save(user);
+        userDao.save(user);}
+
     }
 
     @Override

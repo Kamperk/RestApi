@@ -16,15 +16,11 @@ public class User implements UserDetails {
     @Column(name = "id")
     private long id;
 
-
     @Column(name = "name")
     private String name;
 
     @Column(name = "lastname")
     private String lastname;
-
-    @Column(name = "job")
-    private String job;
 
     @Column(name = "username", unique = true)
     private String username;
@@ -44,36 +40,18 @@ public class User implements UserDetails {
     inverseJoinColumns = @JoinColumn(name = "role_id"))
     private List<Role> roles;
 
-    @Transient
-    private String[] rolesArray;
-
     public User() {
     }
 
-    public User(String name, String lastname, String job) {
-        this.name = name;
-        this.lastname = lastname;
-        this.job = job;
-    }
-
-    public User(long id, String name, String lastname, String job) {
-        this.id = id;
-        this.name = name;
-        this.lastname = lastname;
-        this.job = job;
-    }
-
-    public User(long id, String name, String lastname, String job, String username, String password, Byte age, String email, List<Role> roles, String[] rolesArray) {
+    public User(long id, String name, String lastname, String username, String password, Byte age, String email, List<Role> roles) {
         this.id=id;
         this.name = name;
         this.lastname = lastname;
-        this.job = job;
         this.username = username;
         this.password = password;
         this.age = age;
         this.email = email;
         this.roles = roles;
-        this.rolesArray = rolesArray;
     }
 
     public Byte getAge() {
@@ -116,14 +94,6 @@ public class User implements UserDetails {
         this.lastname = lastname;
     }
 
-    public String getJob() {
-        return job;
-    }
-
-    public void setJob(String job){
-        this.job = job;
-    }
-
     public void setUsername(String username) {
         this.username = username;
     }
@@ -138,14 +108,6 @@ public class User implements UserDetails {
 
     public void setRoles(List<Role> roles) {
         this.roles = roles;
-    }
-
-    public String[] getRolesArray() {
-        return rolesArray;
-    }
-
-    public void setRolesArray(String[] rolesArray) {
-        this.rolesArray = rolesArray;
     }
 
     @Override

@@ -8,6 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -30,8 +31,9 @@ public class AdminController {
     @GetMapping("")
     public String showAllUsers(Model model){
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userService.findByUsername(userDetails.getUsername());
         model.addAttribute("allUsers", userService.getAll());
-        model.addAttribute("authorizedUser", userDetails);
+        model.addAttribute("authorizedUser", user);
         model.addAttribute("newUser", new User());
         model.addAttribute("allRoles", roleDao.findAll());
         return "showAll";
@@ -42,13 +44,18 @@ public class AdminController {
         return "showUser";
     }
 
-    @GetMapping("/new")
-    public String newUser(Model model){
-        model.addAttribute("user", new User());
-        return "newUser";
-    }
-    @PostMapping("")
-    public String addUser(@ModelAttribute("user") User user){
+    @PostMapping("/create")
+    public String addUser(@ModelAttribute("user") User user, @RequestParam(value = "roleList") String [] roleList){
+        List<Role> list =new ArrayList<>();
+            for(int i = 0; i<roleList.length; i++){
+                if(roleList[i].equals("ADMIN")){
+                    list.add(roleDao.findByName("ROLE_ADMIN"));
+                }
+                if(roleList[i].equals("USER")){
+                    list.add(roleDao.findByName("ROLE_USER"));
+                }
+            }
+            user.setRoles(list);
         userService.saveUser(user);
         return "redirect:/admin";
     }
@@ -60,8 +67,8 @@ public class AdminController {
         return "editUser";
     }
 
-    @PatchMapping("/{id}")
-    public String editUser(@ModelAttribute("user") User user, @RequestParam("rolesList") String [] roleList){
+    @PostMapping("/update")
+    public String editUser(@ModelAttribute User user ,@RequestParam(value = "roleList", required = false) String [] roleList ){
         List<Role> list =new ArrayList<>();
         if(roleList!=null){
         for(int i = 0; i<roleList.length; i++){
@@ -77,7 +84,7 @@ public class AdminController {
         return "redirect:/admin";
     }
 
-    @DeleteMapping("/{id}")
+    @PostMapping("/delete/{id}")
     public String removeUser(@PathVariable("id") long id){
         userService.removeUser(id);
         return "redirect:/admin";

@@ -13,4 +13,5 @@ import java.util.List;
 @EnableJpaRepositories
 public interface UserDao extends JpaRepository<User, Long>{
     User findByUsername(String login);
+    User findByEmail(String email);
 }
