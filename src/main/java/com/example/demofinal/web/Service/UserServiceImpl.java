@@ -1,7 +1,6 @@
 package com.example.demofinal.web.Service;
 
 import com.example.demofinal.web.DAO.UserDao;
-import com.example.demofinal.web.model.Role;
 import com.example.demofinal.web.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,6 +55,11 @@ public class UserServiceImpl implements UserService{
     @Override
     public void removeUser(long id ) {
         userDao.deleteById(id);
+    }
+
+    @Override
+    public Optional<User> findById(long id) {
+        return userDao.findById(id);
     }
 
     @Override

@@ -5,6 +5,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public interface UserService extends UserDetailsService {
@@ -14,4 +15,5 @@ public interface UserService extends UserDetailsService {
     void saveUser(User user);
     void removeUser(long id);
     User findByUsername(String login);
+    Optional<User> findById(long id);
 }

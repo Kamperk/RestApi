@@ -8,11 +8,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Controller
@@ -40,12 +40,11 @@ public class AdminController {
     }
     @GetMapping("/{id}/show")
     public String showUser(Model model, @PathVariable(value = "id") long id){
-        model.addAttribute("user", userService.getUser(id));
         return "showUser";
     }
 
     @PostMapping("/create")
-    public String addUser(@ModelAttribute("user") User user, @RequestParam(value = "roleList") String [] roleList){
+    public String addUser(@ModelAttribute("user") User user,@RequestParam(value = "roleList", required = false) String [] roleList){
         List<Role> list =new ArrayList<>();
             for(int i = 0; i<roleList.length; i++){
                 if(roleList[i].equals("ADMIN")){
@@ -59,14 +58,6 @@ public class AdminController {
         userService.saveUser(user);
         return "redirect:/admin";
     }
-
-    @GetMapping("/{id}/edit")
-    public String editUser(@PathVariable("id") long id, Model model){
-        model.addAttribute("user", userService.getUser(id));
-        model.addAttribute("rolesList",roleDao.findAll());
-        return "editUser";
-    }
-
     @PostMapping("/update")
     public String editUser(@ModelAttribute User user ,@RequestParam(value = "roleList", required = false) String [] roleList ){
         List<Role> list =new ArrayList<>();

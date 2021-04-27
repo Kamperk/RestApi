@@ -51,7 +51,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .usernameParameter("username")
                 .passwordParameter("password")
                 // даем доступ к форме логина всем
-                .permitAll();
+                .permitAll().and().csrf().disable();
         http.logout()
                 // разрешаем делать логаут всем
                 .permitAll()
