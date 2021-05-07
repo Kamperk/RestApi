@@ -1,15 +1,14 @@
 package com.example.demofinal.web.controller;
 
-import com.example.demofinal.web.DAO.RoleDao;
+import com.example.demofinal.web.dao.RoleDao;
 import com.example.demofinal.web.Service.UserService;
-import com.example.demofinal.web.model.DTO.UserConverter;
-import com.example.demofinal.web.model.DTO.UserDTO;
+import com.example.demofinal.web.model.dto.UserConverter;
+import com.example.demofinal.web.model.dto.UserDTO;
 import com.example.demofinal.web.model.Role;
 import com.example.demofinal.web.model.User;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,13 +19,11 @@ public class RestController {
 
     private final UserService userService;
     private final RoleDao roleDao;
-    private final UserConverter userConverter;
 
 
-    public RestController(UserService userService, RoleDao roleDao, UserConverter userConverter) {
+    public RestController(UserService userService, RoleDao roleDao) {
         this.userService = userService;
         this.roleDao = roleDao;
-        this.userConverter = userConverter;
     }
 
     @GetMapping("")
@@ -35,41 +32,19 @@ public class RestController {
     }
 
     @GetMapping("/{id}/show")
-    public Optional<User> showUser(@PathVariable(value = "id") long id){
-        return userService.findById(id);
+    public ResponseEntity<Optional<User>> showUser(@PathVariable(value = "id") long id){
+        return ResponseEntity.ok(userService.findById(id));
     }
 
     @PostMapping("/create")
-    public User addUser(@RequestBody UserDTO userDTO, @RequestParam(value = "roles", required = false) Long [] rolesId){
-        User user = userConverter.convertToUser(userDTO);
-        List<Role> list = new ArrayList<>();
-        for(int i = 0; i<rolesId.length; i++){
-            if(rolesId[i]==1){
-                list.add(roleDao.findByName("ROLE_ADMIN"));
-            }
-            if(rolesId[i]==2){
-                list.add(roleDao.findByName("ROLE_USER"));
-            }
-        }
-        user.setRoles(list);
-        userService.saveUser(user);
-        return user;
+    public ResponseEntity<User> addUser(@RequestBody UserDTO userDTO, @RequestParam(value = "roles", required = false) Long [] rolesId){
+        User user = userService.saveUser(userDTO, rolesId);
+        return ResponseEntity.ok().body(user);
     }
 
     @PutMapping("/update")
     public ResponseEntity<User> editUser(@RequestBody UserDTO userDTO, @RequestParam(value = "roles", required = false) Long [] rolesId){
-        User user = userConverter.convertToUser(userDTO);
-        List<Role> list = new ArrayList<>();
-        for(int i = 0; i<rolesId.length; i++){
-            if(rolesId[i]==1){
-                list.add(roleDao.findByName("ROLE_ADMIN"));
-            }
-            if(rolesId[i]==2){
-                list.add(roleDao.findByName("ROLE_USER"));
-            }
-        }
-        user.setRoles(list);
-        userService.editUser(user);
+        User user = userService.editUser(userDTO, rolesId);
         return ResponseEntity.ok().body(user);
     }
 

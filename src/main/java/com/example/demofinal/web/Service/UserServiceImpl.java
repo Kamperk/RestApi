@@ -1,7 +1,11 @@
 package com.example.demofinal.web.Service;
 
-import com.example.demofinal.web.DAO.UserDao;
+import com.example.demofinal.web.dao.RoleDao;
+import com.example.demofinal.web.dao.UserDao;
+import com.example.demofinal.web.model.Role;
 import com.example.demofinal.web.model.User;
+import com.example.demofinal.web.model.dto.UserConverter;
+import com.example.demofinal.web.model.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -10,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,6 +24,12 @@ public class UserServiceImpl implements UserService{
 
     @Autowired
     private UserDao userDao;
+
+    @Autowired
+    private RoleDao roleDao;
+
+    @Autowired
+    private UserConverter userConverter;
 
 
     @Override
@@ -32,19 +43,43 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public void editUser(User user) {
+    public User editUser(UserDTO userDTO, Long [] rolesId) {
+        User user = userConverter.convertToUser(userDTO);
         String crypto = new BCryptPasswordEncoder().encode(user.getPassword());
         user.setPassword(crypto);
+        List<Role> list = new ArrayList<>();
+        for(int i = 0; i<rolesId.length; i++){
+            if(rolesId[i]==1){
+                list.add(roleDao.findByName("ROLE_ADMIN"));
+            }
+            if(rolesId[i]==2){
+                list.add(roleDao.findByName("ROLE_USER"));
+            }
+        }
+        user.setRoles(list);
         userDao.saveAndFlush(user);
+        return user;
     }
 
     @Override
-    public void saveUser(User user) {
+    public User saveUser(UserDTO userDTO, Long [] rolesId) {
+        User user = userConverter.convertToUser(userDTO);
         if (userDao.findByEmail(user.getEmail()) == null){
         String crypto = new BCryptPasswordEncoder().encode(user.getPassword());
         user.setPassword(crypto);
-        userDao.save(user);}
-
+        userDao.save(user);
+            List<Role> list = new ArrayList<>();
+            for(int i = 0; i<rolesId.length; i++){
+                if(rolesId[i]==1){
+                    list.add(roleDao.findByName("ROLE_ADMIN"));
+                }
+                if(rolesId[i]==2){
+                    list.add(roleDao.findByName("ROLE_USER"));
+                }
+            }
+            user.setRoles(list);
+        }
+    return user;
     }
 
     @Override

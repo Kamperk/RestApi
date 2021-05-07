@@ -1,4 +1,4 @@
-package com.example.demofinal.web.model.DTO;
+package com.example.demofinal.web.model.dto;
 
 import org.springframework.stereotype.Component;
 

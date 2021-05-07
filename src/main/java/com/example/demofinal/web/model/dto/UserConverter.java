@@ -1,7 +1,6 @@
-package com.example.demofinal.web.model.DTO;
+package com.example.demofinal.web.model.dto;
 
 import com.example.demofinal.web.model.User;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
