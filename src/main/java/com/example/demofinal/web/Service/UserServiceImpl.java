@@ -57,7 +57,6 @@ public class UserServiceImpl implements UserService{
         userDao.deleteById(id);
     }
 
-    @Override
     public Optional<User> findById(long id) {
         return userDao.findById(id);
     }

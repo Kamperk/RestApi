@@ -4,6 +4,7 @@ import com.example.demofinal.web.DAO.RoleDao;
 import com.example.demofinal.web.Service.UserService;
 import com.example.demofinal.web.model.Role;
 import com.example.demofinal.web.model.User;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -38,6 +39,7 @@ public class AdminController {
         model.addAttribute("allRoles", roleDao.findAll());
         return "showAll";
     }
+
     @GetMapping("/{id}/show")
     public String showUser(Model model, @PathVariable(value = "id") long id){
         return "showUser";

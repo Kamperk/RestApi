@@ -1,9 +1,12 @@
 package com.example.demofinal.web.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonSetter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -40,14 +43,13 @@ public class User implements UserDetails {
     public User() {
     }
 
-    public User(long id, String name, String lastname, String password, Byte age, String email, List<Role> roles) {
+    public User(long id, String name, String lastname, String password, Byte age, String email) {
         this.id=id;
         this.name = name;
         this.lastname = lastname;
         this.password = password;
         this.age = age;
         this.email = email;
-        this.roles = roles;
     }
 
     public Byte getAge() {
@@ -99,8 +101,13 @@ public class User implements UserDetails {
         return roles.toString().replace("[", "").replace("]", "");
     }
 
+    @JsonIgnore
     public void setRoles(List<Role> roles) {
-        this.roles = roles;
+        this.roles=roles;
+    }
+    @JsonSetter
+    public void setRoles(Role ... roles) {
+        this.roles.addAll(Arrays.asList(roles));
     }
 
 
