@@ -36,5 +36,4 @@ public class UserController {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return ResponseEntity.ok(userService.findByUsername(userDetails.getUsername()));
     }
-
 }

@@ -2,10 +2,9 @@ package com.example.demofinal.web.controller;
 
 import com.example.demofinal.web.dao.RoleDao;
 import com.example.demofinal.web.Service.UserService;
-import com.example.demofinal.web.model.dto.UserConverter;
 import com.example.demofinal.web.model.dto.UserDTO;
 import com.example.demofinal.web.model.Role;
-import com.example.demofinal.web.model.User;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,35 +26,32 @@ public class RestController {
     }
 
     @GetMapping("")
-    public ResponseEntity<List<User>> users(){
+    public ResponseEntity<List<UserDTO>> users(){
         return ResponseEntity.ok().body(userService.getAll());
     }
 
     @GetMapping("/{id}/show")
-    public ResponseEntity<Optional<User>> showUser(@PathVariable(value = "id") long id){
-        return ResponseEntity.ok(userService.findById(id));
+    public ResponseEntity<UserDTO> showUser(@PathVariable(value = "id") long id){
+        UserDTO userDTO = userService.findById(id);
+        return ResponseEntity.ok(userDTO);
     }
 
     @PostMapping("/create")
-    public ResponseEntity<User> addUser(@RequestBody UserDTO userDTO, @RequestParam(value = "roles", required = false) Long [] rolesId){
-        User user = userService.saveUser(userDTO, rolesId);
-        return ResponseEntity.ok().body(user);
+    public ResponseEntity<UserDTO> addUser(@RequestBody UserDTO userDTO){
+        userService.saveUser(userDTO);
+        return ResponseEntity.ok().body(userDTO);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<User> editUser(@RequestBody UserDTO userDTO, @RequestParam(value = "roles", required = false) Long [] rolesId){
-        User user = userService.editUser(userDTO, rolesId);
-        return ResponseEntity.ok().body(user);
+    public ResponseEntity<UserDTO> editUser(@RequestBody UserDTO userDTO){
+        userService.editUser(userDTO);
+        return ResponseEntity.ok().body(userDTO);
     }
 
     @DeleteMapping("/delete/{id}")
-    public String removeUser(@PathVariable("id") long id){
-        Optional<User> user = userService.findById(id);
-        if(!user.isPresent()){
-            return "There is not user with ID " + id + " in Database";
-        }
+    public ResponseEntity<?> removeUser(@PathVariable("id") long id) {
         userService.removeUser(id);
-        return "User with ID " + id + " was deleted";
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/getUserRole/{id}")

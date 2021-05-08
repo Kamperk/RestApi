@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -38,48 +37,46 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public List<User> getAll() {
-        return userDao.findAll();
+    public List<UserDTO> getAll() {
+        return userConverter.convertAllDTO(userDao.findAll());
     }
 
     @Override
-    public User editUser(UserDTO userDTO, Long [] rolesId) {
+    public void editUser(UserDTO userDTO) {
         User user = userConverter.convertToUser(userDTO);
         String crypto = new BCryptPasswordEncoder().encode(user.getPassword());
         user.setPassword(crypto);
         List<Role> list = new ArrayList<>();
-        for(int i = 0; i<rolesId.length; i++){
-            if(rolesId[i]==1){
+        for(int i = 0; i<userDTO.getRoles().length; i++){
+            if(userDTO.getRoles()[i].contains("ADMIN")){
                 list.add(roleDao.findByName("ROLE_ADMIN"));
             }
-            if(rolesId[i]==2){
+            if(userDTO.getRoles()[i].contains("USER")){
                 list.add(roleDao.findByName("ROLE_USER"));
             }
         }
         user.setRoles(list);
         userDao.saveAndFlush(user);
-        return user;
     }
 
     @Override
-    public User saveUser(UserDTO userDTO, Long [] rolesId) {
+    public void saveUser(UserDTO userDTO) {
         User user = userConverter.convertToUser(userDTO);
         if (userDao.findByEmail(user.getEmail()) == null){
         String crypto = new BCryptPasswordEncoder().encode(user.getPassword());
         user.setPassword(crypto);
         userDao.save(user);
             List<Role> list = new ArrayList<>();
-            for(int i = 0; i<rolesId.length; i++){
-                if(rolesId[i]==1){
+            for(int i = 0; i<userDTO.getRoles().length; i++){
+                if(userDTO.getRoles()[i].contains("ADMIN")){
                     list.add(roleDao.findByName("ROLE_ADMIN"));
                 }
-                if(rolesId[i]==2){
+                if(userDTO.getRoles()[i].contains("USER")){
                     list.add(roleDao.findByName("ROLE_USER"));
                 }
             }
             user.setRoles(list);
         }
-    return user;
     }
 
     @Override
@@ -92,8 +89,9 @@ public class UserServiceImpl implements UserService{
         userDao.deleteById(id);
     }
 
-    public Optional<User> findById(long id) {
-        return userDao.findById(id);
+    public UserDTO findById(long id) {
+        UserDTO userDTO = userConverter.convertToUserDTO(userDao.findById(id).get());
+        return userDTO;
     }
 
     @Override

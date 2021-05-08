@@ -1,5 +1,6 @@
 package com.example.demofinal.web.model;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import org.springframework.security.core.GrantedAuthority;
@@ -97,17 +98,18 @@ public class User implements UserDetails {
         this.password = password;
     }
 
+    @JsonGetter
     public String getRoles() {
         return roles.toString().replace("[", "").replace("]", "");
     }
 
-    @JsonIgnore
+    public List<Role> getRolesList(){
+        return this.roles;
+    }
+
+
     public void setRoles(List<Role> roles) {
         this.roles=roles;
-    }
-    @JsonSetter
-    public void setRoles(Role ... roles) {
-        this.roles.addAll(Arrays.asList(roles));
     }
 
 

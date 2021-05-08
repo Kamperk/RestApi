@@ -1,4 +1,4 @@
-function getAll(){
+function getAll() {
     const url = 'http://localhost:8080/api';
     const container = $('#tbody');
     $.ajax({
@@ -25,18 +25,19 @@ function getAll(){
         })
 
         container.html(html);
-
     })
 }
 
-function getEditModal(id){
+function getEditModal(id) {
     $.ajax({
         url: 'http://localhost:8080/api/' + id + '/show',
         dataType: 'json',
         type: 'GET'
     }).done(user => {
-                let html = document.getElementById("modalEdit");
-                html.innerHTML = `<div id="edit" class="modal fade" tabIndex="-1" role="dialog" 
+        let html = document.getElementById("modalEdit");
+        let roles = ['Admin', 'User'];
+
+        html.innerHTML = `<div id="edit" class="modal fade" tabIndex="-1" role="dialog" 
                               aria-labelledby="TitleModalLabel" aria-hidden="true"
                               data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-dialog-scrollable">
@@ -60,8 +61,6 @@ function getEditModal(id){
                                 <input type="text" name="name" value="${user.name}" id="name"></p>
                             <p><label for="lastname">Lastname</label>
                                 <input type="text" name="lastname" value="${user.lastname}" id="lastname"></p>
-                            <p><label for="Username">Username</label>
-                                <input type="text" name="username" value="${user.username}" id="Username"></p>
                             <p><label for="Password">Password</label>
                                 <input type="password" name="password" value="${user.password}" id="Password"></p>
                             <p><label for="age">Age</label>
@@ -70,10 +69,10 @@ function getEditModal(id){
                                 <input type="text" name="email" value="${user.email}" id="email"></p>
                             <p>
                             <label>Role</label>
-                                <select id="roles" name="roles" multiple ="2" required
+                                <select id="roles" multiple size="2" required
                                                class="form-control form-control-sm">
-                                        <option value="1">ADMIN</option>
-                                        <option value="2">USER</option>
+                                        <option value="ADMIN">ADMIN</option>
+                                        <option value="USER">USER</option>
                                 </select>
                             </p>
                                 <div class="modal-footer">
@@ -88,38 +87,42 @@ function getEditModal(id){
                 </div>
             </div>
         </div>`
-                $('#edit').modal();
-                $('.js-edit-user').click(function () {
-                    editUser(user);
-                })
-            })
-    function editUser(user){
+        $('#edit').modal();
+        $('.js-edit-user').click(function () {
+            editUser(user);
+        })
+    })
 
+    function editUser(user) {
         const form = document.getElementById('formEditUser');
         const formData = new FormData(form);
-        const data = {};
-
-        let values = $('#roles').val();
+        console.log(form);
+        const data = {
+            roles: $('#roles').val()
+        };
         for (let key of formData.keys()) {
             data[key] = formData.get(key);
         }
+
         $.ajax({
-                url: 'http://localhost:8080/api/update?roles='+ values,
+                url: 'http://localhost:8080/api/update',
                 type: 'PUT',
                 contentType: 'application/json',
                 processData: false,
                 cash: false,
                 data: JSON.stringify(data)
             }
-        ).always(function (){
+        ).always(function () {
             getAll();
             $('#edit').modal('hide');
         })
     }
 }
+
 $(document).ready(() => {
     getAll();
 })
+
 function getDeleteModal(id) {
     $.ajax({
         url: 'http://localhost:8080/api/' + id + '/show',
@@ -154,8 +157,6 @@ function getDeleteModal(id) {
                                 <input type="text" name="name" readonly value="${user.name}" id="name"></p>
                             <p><label for="lastname">Lastname</label>
                                 <input type="text" name="lastname" readOnly value="${user.lastname}" id="lastname"></p>
-                            <p><label for="Username">Username</label>
-                                <input type="text" name="username" readOnly value="${user.username}" id="Username"></p>
                             <p><label for="Password">Password</label>
                                 <input type="password" name="password" readOnly value="${user.password}" id="Password"></p>
                             <p><label for="age">Age</label>
@@ -165,7 +166,7 @@ function getDeleteModal(id) {
                             <br>
                             <p>
                             <label>Role</label>
-                                <select id="editRoles" name="role" multiple size="2" required
+                                <select id="editRoles" name="roles" multiple size="2" required
                                                class="form-control form-control-sm">
                                         <option value="${user.roles}">ADMIN</option>
                                         <option value="${user.roles}">USER</option>
@@ -188,6 +189,7 @@ function getDeleteModal(id) {
             editUser(user);
         })
     })
+
     function editUser(user) {
         const form = document.getElementById('formDeleteUser');
         const formData = new FormData(form);
@@ -210,18 +212,19 @@ function getDeleteModal(id) {
         })
     }
 }
-function addUser(){
+
+function addUser() {
     let user = {
         name: $('#new_user #firstname').val(),
         lastname: $('#new_user #lastname').val(),
         age: $('#new_user #age').val(),
         email: $('#new_user #email').val(),
-        password: $('#new_user #password').val()
+        password: $('#new_user #password').val(),
+        roles: $('#addroleList').val()
     }
-    let values = $('#addroleList').val();
 
     $.ajax({
-            url: 'http://localhost:8080/api/create?roles='+ values,
+            url: 'http://localhost:8080/api/create',
             type: 'POST',
             contentType: 'application/json',
             processData: false,

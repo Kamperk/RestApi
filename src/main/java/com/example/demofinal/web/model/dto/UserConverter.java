@@ -1,8 +1,10 @@
 package com.example.demofinal.web.model.dto;
 
+import com.example.demofinal.web.model.Role;
 import com.example.demofinal.web.model.User;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,6 +18,11 @@ public class UserConverter {
         userDTO.setEmail(user.getEmail());
         userDTO.setPassword(user.getPassword());
         userDTO.setAge(user.getAge());
+        String [] roles = new String[2];
+        for(int i=0; i<user.getRolesList().size(); i++){
+            roles[i] = user.getRolesList().get(i).getName().substring(5);
+        }
+        userDTO.setRoles(roles);
         return userDTO;
     }
     public List<UserDTO> convertAllDTO(List<User> userList){
@@ -29,6 +36,15 @@ public class UserConverter {
         user.setEmail(userDTO.getEmail());
         user.setPassword(userDTO.getPassword());
         user.setAge(userDTO.getAge());
+        List<Role> roles = new ArrayList<>();
+        for(int i = 0; i<userDTO.getRoles().length; i++){
+            if(userDTO.getRoles()[i].contains("ADMIN")){
+                roles.add(new Role(1, "ROLE_ADMIN"));
+            }else{
+                roles.add(new Role(2, "ROLE_USER"));
+            }
+        }
+        user.setRoles(roles);
         return user;
     }
 

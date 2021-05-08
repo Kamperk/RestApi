@@ -11,10 +11,10 @@ import java.util.Optional;
 @Service
 public interface UserService extends UserDetailsService {
     User getUser(long id);
-    List<User> getAll();
-    User editUser(UserDTO user, Long [] id);
-    User saveUser(UserDTO user, Long [] id);
+    List<UserDTO> getAll();
+    void editUser(UserDTO user);
+    void saveUser(UserDTO user);
     void removeUser(long id);
     User findByUsername(String login);
-    Optional<User> findById(long id);
+    UserDTO findById(long id);
 }
