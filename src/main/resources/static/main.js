@@ -11,7 +11,7 @@ function getAll() {
 
         response.forEach((item) => {
             let trHtml =
-                `<tr>
+                `<tr data-id="${item.id}">
                     <td>${item.id}</td>
                     <td>${item.name}</td>
                     <td>${item.lastname}</td>
@@ -113,7 +113,7 @@ function getEditModal(id) {
                 data: JSON.stringify(data)
             }
         ).always(function () {
-            getAll();
+            getUser(id);
             $('#edit').modal('hide');
         })
     }
@@ -176,7 +176,7 @@ function getDeleteModal(id) {
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close
                                     </button>
                                     <button type="button" 
-                                            class="btn btn-danger js-edit-user">Delete
+                                            class="btn btn-danger js-delete-user">Delete
                                     </button>
                                 </div>
                         </form>
@@ -185,12 +185,12 @@ function getDeleteModal(id) {
             </div>
         </div>`
         $('#edit').modal();
-        $('.js-edit-user').click(function () {
-            editUser(user);
+        $('.js-delete-user').click(function () {
+            deleteUser();
         })
     })
 
-    function editUser(user) {
+    function deleteUser() {
         const form = document.getElementById('formDeleteUser');
         const formData = new FormData(form);
         const data = {};
@@ -198,6 +198,8 @@ function getDeleteModal(id) {
         for (let key of formData.keys()) {
             data[key] = formData.get(key);
         }
+        const id = data.id
+
         $.ajax({
                 url: 'http://localhost:8080/api/delete/' + id + '',
                 type: 'DELETE',
@@ -207,7 +209,7 @@ function getDeleteModal(id) {
                 data: JSON.stringify(data)
             }
         ).always(function () {
-            getAll();
+            $(`tr[data-id=${data.id}]`).remove()
             $('#edit').modal('hide');
         })
     }
@@ -236,4 +238,29 @@ function addUser() {
         $('.ustable').click()
     })
 }
+function getUser(id) {
+    const url = 'http://localhost:8080/api/' + id + '/show';
+    const container = $('#tbody');
+    $.ajax({
+        url: url,
+        dataType: 'json',
+        type: "GET",
+    }).done((response) => {
+        let item = response;
+
+            let trHtml =
+                `
+                    <td>${item.id}</td>
+                    <td>${item.name}</td>
+                    <td>${item.lastname}</td>
+                    <td>${item.age}</td>
+                    <td>${item.email}</td>
+                    <td>${item.roles}</td>
+                    <td><a id="buttonEditUser" role="button" onclick="getEditModal(${item.id})" class="btn btn-primary btn-sm" data-target="#buttonEditUser">Edit</a></td>
+                    <td><a id="buttonDeleteUser" role="button" onclick="getDeleteModal(${item.id})" class="btn btn-danger btn-sm" >Delete</a></td>
+                `;
+        container.find(`tr[data-id=${item.id}]`).html(trHtml)
+    })
+}
+
 
